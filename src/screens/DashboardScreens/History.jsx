@@ -10,6 +10,7 @@ import {
   setPage,
   resetData,
 } from '../../redux/actions/transaction';
+import color from '../../styles/color';
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
@@ -83,14 +84,35 @@ class History extends React.Component {
 
   card = (val, index) => (
     <TouchableOpacity key={val.key} style={styled.card}>
-      <Text>{val.book_title}</Text>
-      <Text
+      <View
         style={{
-          ...styled.status,
-          ...(val.status === 'returned' ? styled.avail : styled.booked),
+          ...{
+            width: '100%',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center',
+          },
         }}>
-        {val.status}
-      </Text>
+        <View>
+          <Text>Title: {val.book_title}</Text>
+          <Text
+            style={{
+              ...{
+                fontSize: typography.FONT_SIZE_SECONDARY,
+                color: color.COLOR_GRAY,
+              },
+            }}>
+            Last updated: {val.last_updated.slice(0, 10)}
+          </Text>
+        </View>
+        <Text
+          style={{
+            ...styled.status,
+            ...(val.status === 'returned' ? styled.avail : styled.booked),
+          }}>
+          {val.status}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -137,9 +159,7 @@ const styled = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: utilities.CONTAINER_CARD_PADDING_HORIZONTAL,
     paddingVertical: utilities.CONTAINER_CARD_PADDING_VERTICAL,
-    justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row',
     marginBottom: 10,
   },
   status: {

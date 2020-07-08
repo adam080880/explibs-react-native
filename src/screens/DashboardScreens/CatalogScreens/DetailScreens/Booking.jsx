@@ -30,7 +30,7 @@ class Booking extends React.Component {
   }
 
   componentDidMount() {
-    this.props.transaction.resetLoading();
+    this.props.resetLoading();
   }
 
   toggleIsOpen = (e) => {
