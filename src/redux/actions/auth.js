@@ -32,3 +32,7 @@ export const logout = () => ({
   type: 'LOGOUT',
   payload: true,
 });
+export const editProfile = (data, token) => ({
+  type: 'EDIT_PROFILE',
+  payload: AuthModel.editProfile(data, token),
+});

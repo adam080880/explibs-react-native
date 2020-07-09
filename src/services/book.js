@@ -9,4 +9,5 @@ export default {
   find: (id) => {
     return axios.get(apiUrl(`/books/${id}`));
   },
+  popular: () => axios.get(apiUrl('/books/popular')),
 };

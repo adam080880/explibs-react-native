@@ -4,6 +4,7 @@ const initState = {
   msg: '',
   book: {},
   data: [],
+  popular: [],
   recents: [],
   pageInfo: {
     page: 1,

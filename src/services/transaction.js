@@ -20,4 +20,11 @@ export default {
       },
     });
   },
+  notReturned: (token) => {
+    return axios.get(apiUrl('/transaction/not_returned'), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
 };

@@ -24,3 +24,8 @@ export const setPage = (page) => ({
   type: 'MEMBER_TRANSACTION_PAGE',
   payload: page,
 });
+
+export const unfinished = (token) => ({
+  type: 'UNFINISHED_TRANSACTION',
+  payload: TransactionModel.notReturned(token),
+});

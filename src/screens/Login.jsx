@@ -13,6 +13,7 @@ import {
   resetLoading,
   resetMsg,
   resetStatus,
+  logout,
 } from '../redux/actions/auth';
 import Spinner from 'react-native-spinkit';
 
@@ -25,6 +26,7 @@ const mapDispatchToProps = {
   resetLoading,
   resetMsg,
   resetStatus,
+  logout,
 };
 
 class Login extends React.Component {
@@ -60,9 +62,20 @@ class Login extends React.Component {
       this.props.auth.isLoading === false &&
       this.props.auth.status === true
     ) {
-      this.props.resetMsg();
-      this.props.resetLoading();
-      this.props.changePage('home');
+      if (this.props.auth.session.role !== 'Member') {
+        this.props.logout();
+        this.props.resetMsg('Your role is not match with this apps');
+        this.props.resetStatus(false);
+        this.props.resetLoading(false);
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({
+          msg: this.props.auth.msg,
+        });
+      } else {
+        this.props.resetMsg();
+        this.props.resetLoading();
+        this.props.changePage('home');
+      }
     } else if (
       this.props.auth.isLoading === false &&
       this.props.auth.status === false

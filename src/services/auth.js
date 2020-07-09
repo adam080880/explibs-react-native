@@ -17,4 +17,10 @@ export default {
         Authorization: 'Bearer '.concat(token),
       },
     }),
+  editProfile: (data, token) =>
+    axios.patch(apiUrl('/auth/profile/edit'), qs.stringify(data), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
 };

@@ -129,7 +129,19 @@ class BrowseBook extends React.Component {
               </View>
             );
           }}
-          onRefresh={this.getBook}
+          onRefresh={() => {
+            this.setState(
+              {
+                page: 1,
+                search: '',
+              },
+              () => {
+                this.props.resetData();
+                this.props.setPage(1);
+                this.getBook();
+              },
+            );
+          }}
           refreshing={this.props.book.isLoading === true}
           onEndReached={this.nextPage}
           onEndReachedThreshold={0.5}

@@ -8,6 +8,7 @@ import {
   resetMsg,
   logout,
   resetStatus,
+  editProfile,
 } from '../../redux/actions/auth';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -35,6 +36,7 @@ const mapDispatchToProps = {
   logout,
   resetMsg,
   resetStatus,
+  editProfile,
 };
 
 const radioParam = [
@@ -58,7 +60,7 @@ class Profile extends React.Component {
       gender: '',
       birthDate: '',
       datePicker: false,
-      not: false,
+      isLoading: false,
     };
   }
 
@@ -77,7 +79,6 @@ class Profile extends React.Component {
             ? 'm'
             : 'f'
           : '',
-        not: bioInit,
       });
     });
   }
@@ -85,21 +86,53 @@ class Profile extends React.Component {
   submit = (e) => {
     const {name, phone, gender, birthDate: birthdate} = this.state;
     const res = birthdate.toJSON().slice(0, 10);
-    this.props
-      .confirmRegistration(
-        {name, phone, gender, birthdate: res},
-        this.props.auth.session.token,
-      )
-      .then(() => {
-        this.props.logout();
-        this.props.changePage('login');
-      });
+    this.setState({
+      isLoading: true,
+    });
+    if (this.props.auth.session.name === null) {
+      this.props
+        .confirmRegistration(
+          {name, phone, gender, birthdate: res},
+          this.props.auth.session.token,
+        )
+        .then(() => {
+          this.props.logout();
+          this.props.changePage('login');
+        })
+        .finally(() => {
+          this.setState({
+            isLoading: false,
+          });
+        });
+    } else {
+      this.props
+        .editProfile(
+          {name, phone, gender, birthdate: res},
+          this.props.auth.session.token,
+        )
+        .then(() => {
+          this.props.profile(this.props.auth.session.token).then((res2) => {
+            this.setState({
+              email: res2.value.data.data.email,
+              name: res2.value.data.data.bio.name,
+              birthDate: new Date(res2.value.data.data.bio.birthdate),
+              phone: res2.value.data.data.bio.phone,
+              gender: res2.value.data.data.bio.gender.length > 0 ? 'm' : 'f',
+            });
+          });
+        })
+        .finally(() => {
+          this.setState({
+            isLoading: false,
+          });
+        });
+    }
   };
 
   render() {
     return (
       <>
-        {this.props.auth.isLoading && (
+        {(this.props.auth.isLoading || this.state.isLoading) && (
           <View
             style={{
               ...{
@@ -113,14 +146,14 @@ class Profile extends React.Component {
                 ...style.alert,
                 ...{opacity: 0.6},
               }}
-              isVisible={this.props.auth.isLoading}
+              isVisible={this.props.auth.isLoading || this.state.isLoading}
               size={typography.FONT_SIZE_APP * 3}
               type={'ThreeBounce'}
               color={color.COLOR_UTILITIES_BACKGROUND}
             />
           </View>
         )}
-        {this.props.auth.isLoading === null && (
+        {(this.props.auth.isLoading === null || !this.state.isLoading) && (
           <>
             <SafeAreaView
               style={{
@@ -206,12 +239,14 @@ class Profile extends React.Component {
                     Birthdate
                   </Text>
                   <moleculs.Button
-                    disabled={!this.state.not}
-                    style={{...{opacity: 0.8}}}
+                    style={{...{opacity: 0.9}}}
                     onPress={(e) =>
                       this.setState({
                         datePicker: !this.state.datePicker,
-                        birthDate: new Date(),
+                        birthDate:
+                          (this.state.birthDate &&
+                            new Date(this.state.birthDate)) ||
+                          new Date(),
                       })
                     }>
                     {this.state.birthDate
@@ -233,13 +268,11 @@ class Profile extends React.Component {
                     />
                   )}
                 </View>
-                {this.state.not && (
-                  <moleculs.Button
-                    onPress={this.submit}
-                    style={{...{marginBottom: 20}}}>
-                    Submit
-                  </moleculs.Button>
-                )}
+                <moleculs.Button
+                  onPress={this.submit}
+                  style={{...{marginBottom: 20}}}>
+                  Submit
+                </moleculs.Button>
               </ScrollView>
             </SafeAreaView>
           </>

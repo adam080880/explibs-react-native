@@ -133,7 +133,19 @@ class History extends React.Component {
           ).map((id) => this.props.transaction.data.find((a) => a.id === id))}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({item, index}) => this.card(item, index)}
-          onRefresh={this.getHistory}
+          onRefresh={() => {
+            this.setState(
+              {
+                page: 1,
+                search: '',
+              },
+              () => {
+                this.props.resetData();
+                this.props.setPage(1);
+                this.getHistory();
+              },
+            );
+          }}
           refreshing={this.props.transaction.isLoading === true}
           onEndReached={this.nextPage}
           onEndReachedThreshold={0.5}

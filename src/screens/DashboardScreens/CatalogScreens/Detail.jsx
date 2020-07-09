@@ -106,22 +106,24 @@ class Detail extends React.Component {
                 }}>
                 {this.props.book.book.status}
               </Text>
-              <moleculs.Button
-                disabled={this.props.book.book.status !== 'available'}
-                style={{
-                  ...{
-                    paddingHorizontal: utilities.BUTTON_PADDING_HORIZONTAL,
-                    paddingVertical: utilities.BUTTON_PADDING_VERTICAL,
-                    marginTop: 15,
-                  },
-                }}
-                onPress={(e) =>
-                  this.props.navigation.navigate('booking', {
-                    book_id: this.state.book_id,
-                  })
-                }>
-                Booking
-              </moleculs.Button>
+              {Object.keys(this.props.auth.session).length > 0 && (
+                <moleculs.Button
+                  disabled={this.props.book.book.status !== 'available'}
+                  style={{
+                    ...{
+                      paddingHorizontal: utilities.BUTTON_PADDING_HORIZONTAL,
+                      paddingVertical: utilities.BUTTON_PADDING_VERTICAL,
+                      marginTop: 15,
+                    },
+                  }}
+                  onPress={(e) =>
+                    this.props.navigation.navigate('booking', {
+                      book_id: this.state.book_id,
+                    })
+                  }>
+                  Booking
+                </moleculs.Button>
+              )}
               <Text
                 style={{
                   ...{

@@ -30,22 +30,23 @@ class BottomBar extends React.Component {
           component={this.props.page.catalog(this.props.data)}
           name="home"
         />
-        {Object.keys(this.props.auth.session).length > 0 && (
-          <BottomTab.Screen
-            options={{
-              title: 'Histories',
-              tabBarIcon: ({color: colorProps}) => (
-                <Icon
-                  name="clockcircleo"
-                  color={colorProps}
-                  size={typography.FONT_SIZE_APP}
-                />
-              ),
-            }}
-            component={this.props.page.histories(this.props.histories)}
-            name="history"
-          />
-        )}
+        {Object.keys(this.props.auth.session).length > 0 &&
+          this.props.auth.session.name != null && (
+            <BottomTab.Screen
+              options={{
+                title: 'Histories',
+                tabBarIcon: ({color: colorProps}) => (
+                  <Icon
+                    name="clockcircleo"
+                    color={colorProps}
+                    size={typography.FONT_SIZE_APP}
+                  />
+                ),
+              }}
+              component={this.props.page.histories(this.props.histories)}
+              name="history"
+            />
+          )}
         {Object.keys(this.props.auth.session).length > 0 && (
           <BottomTab.Screen
             options={{

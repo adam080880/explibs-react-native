@@ -24,3 +24,8 @@ export const setPage = (page) => ({
   type: 'SET_PAGE',
   payload: page,
 });
+
+export const popular = () => ({
+  type: 'POPULAR_BOOK',
+  payload: BookModel.popular(),
+});
