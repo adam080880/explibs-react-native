@@ -1,6 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {SafeAreaView, View, Text, StyleSheet, ScrollView} from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Platform,
+} from 'react-native';
 import {
   profile,
   resetLoading,
@@ -12,6 +20,8 @@ import {
 } from '../../redux/actions/auth';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import ImagePicker from 'react-native-image-picker';
+import {} from 'react-native-permissions';
 import Spinner from 'react-native-spinkit';
 import {
   RadioButton,
@@ -61,6 +71,8 @@ class Profile extends React.Component {
       birthDate: '',
       datePicker: false,
       isLoading: false,
+      file: false,
+      fileUri: false,
     };
   }
 
@@ -79,9 +91,39 @@ class Profile extends React.Component {
             ? 'm'
             : 'f'
           : '',
+        fileUri: !bioInit ? res.value.data.data.bio.profile : false,
       });
     });
   }
+
+  click = (e) => {
+    ImagePicker.showImagePicker(
+      {
+        title: 'Edit Profile Image',
+        storageOptions: {
+          skipBackup: true,
+          path: '../../../assets/uploads/profile',
+        },
+      },
+      (response) => {
+        if (response.didCancel) {
+          this.setState({
+            file: false,
+          });
+        } else if (response.error) {
+          console.log(response.error);
+          this.setState({
+            file: false,
+          });
+        } else {
+          this.setState({
+            file: response,
+            fileUri: response.uri,
+          });
+        }
+      },
+    );
+  };
 
   submit = (e) => {
     const {name, phone, gender, birthDate: birthdate} = this.state;
@@ -105,11 +147,23 @@ class Profile extends React.Component {
           });
         });
     } else {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('phone', phone);
+      formData.append('gender', gender);
+      formData.append('birthdate', birthdate);
+      if (this.state.file) {
+        formData.append('image', {
+          name: this.state.file.fileName,
+          type: this.state.file.type,
+          uri:
+            Platform.OS === 'android'
+              ? this.state.file.uri
+              : this.state.file.uri.replace('file://', ''),
+        });
+      }
       this.props
-        .editProfile(
-          {name, phone, gender, birthdate: res},
-          this.props.auth.session.token,
-        )
+        .editProfile(formData, this.props.auth.session.token)
         .then(() => {
           this.props.profile(this.props.auth.session.token).then((res2) => {
             this.setState({
@@ -118,8 +172,12 @@ class Profile extends React.Component {
               birthDate: new Date(res2.value.data.data.bio.birthdate),
               phone: res2.value.data.data.bio.phone,
               gender: res2.value.data.data.bio.gender.length > 0 ? 'm' : 'f',
+              fileUri: res.value.data.data.bio.profile,
             });
           });
+        })
+        .catch((rej) => {
+          console.log(rej);
         })
         .finally(() => {
           this.setState({
@@ -158,13 +216,50 @@ class Profile extends React.Component {
             <SafeAreaView
               style={{
                 ...{
-                  paddingHorizontal: 27,
                   flex: 1,
                   height: '100%',
                 },
               }}>
-              <ScrollView style={{...{flex: 1}}}>
+              <ScrollView style={{...{flex: 1, paddingHorizontal: 27}}}>
                 <Text style={this.props.styled.label}>Profile</Text>
+                <View
+                  style={{
+                    ...{
+                      width: '100%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: 25,
+                    },
+                  }}>
+                  {this.props.auth.session.name !== null && (
+                    <Image
+                      resizeMode={'cover'}
+                      source={
+                        !this.state.fileUri
+                          ? require('../../assets/images/humann.png')
+                          : {uri: this.state.fileUri}
+                      }
+                      style={{
+                        ...{
+                          height: 150,
+                          width: 150,
+                          borderRadius: 150 / 2,
+                        },
+                      }}
+                    />
+                  )}
+                  <Text
+                    onPress={this.click}
+                    style={{
+                      ...{
+                        color: color.COLOR_UTILITIES_BACKGROUND,
+                        fontWeight: 'bold',
+                        marginTop: 18,
+                      },
+                    }}>
+                    Edit Profile
+                  </Text>
+                </View>
                 <View>
                   <atoms.TextInput
                     label="Email"

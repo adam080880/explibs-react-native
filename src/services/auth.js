@@ -18,8 +18,9 @@ export default {
       },
     }),
   editProfile: (data, token) =>
-    axios.patch(apiUrl('/auth/profile/edit'), qs.stringify(data), {
+    axios.patch(apiUrl('/auth/profile/edit'), data, {
       headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     }),

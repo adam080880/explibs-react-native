@@ -79,6 +79,8 @@ target 'explibsapps' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'explibsappsTests' do
     inherit! :complete
     # Pods for testing
@@ -103,4 +105,15 @@ target 'explibsapps-tvOS' do
     inherit! :search_paths
     # Pods for testing
   end
+end
+
+target 'YourAwesomeProject' do
+
+  # …
+
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+  pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary.podspec"
+
 end

@@ -62,7 +62,7 @@ class Catalog extends React.Component {
     }
   }
 
-  book = (val, index) => {
+  book = (data) => (val, index) => {
     return (
       <Book
         style={{
@@ -72,7 +72,7 @@ class Catalog extends React.Component {
             height: 242,
             backgroundColor: 'gray',
             flex: 0.5,
-            marginRight: index === 3 ? 0 : 10,
+            marginRight: index === data.length - 1 ? 0 : 10,
           },
         }}
         key={val.id}
@@ -128,11 +128,11 @@ class Catalog extends React.Component {
           },
         }}>
         <Image
+          resizeMode={'contain'}
           source={require('../../assets/images/hello.png')}
           style={{
             ...{
               width: '100%',
-              height: 120,
               borderRadius: 10,
               marginTop: 25,
             },
@@ -167,7 +167,7 @@ class Catalog extends React.Component {
                 flex: 1,
               },
             }}>
-            {this.state.popular.map(this.book)}
+            {this.state.popular.map(this.book(this.state.popular))}
           </View>
         </ScrollView>
 
@@ -215,7 +215,7 @@ class Catalog extends React.Component {
                 flex: 1,
               },
             }}>
-            {this.state.recent.map(this.book)}
+            {this.state.recent.map(this.book(this.state.recent))}
           </View>
         </ScrollView>
 
