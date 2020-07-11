@@ -20,6 +20,7 @@ export default {
   editProfile: (data, token) =>
     axios.patch(apiUrl('/auth/profile/edit'), data, {
       headers: {
+        Accept: 'application/json',
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },

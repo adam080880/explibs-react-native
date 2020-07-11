@@ -1,8 +1,8 @@
 import BookModel from '../../services/book';
 
-export const reset = () => ({
+export const reset = (loading = null) => ({
   type: 'RESET',
-  payload: null,
+  payload: loading,
 });
 
 export const resetData = () => ({
@@ -28,4 +28,9 @@ export const setPage = (page) => ({
 export const popular = () => ({
   type: 'POPULAR_BOOK',
   payload: BookModel.popular(),
+});
+
+export const review = (data, bookId, token) => ({
+  type: 'REVIEW',
+  payload: BookModel.review(data, bookId, token),
 });

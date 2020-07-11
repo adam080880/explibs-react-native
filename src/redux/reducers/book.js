@@ -23,7 +23,7 @@ export default (state = initState, action) => {
       return {...state, ...{isLoading: null}};
     }
     case 'RESET_BOOK': {
-      return {...state, ...{data: []}};
+      return {...state, ...{data: [], book: {}}};
     }
     case 'GET_BOOK_PENDING': {
       return {...state, ...{isLoading: true, status: null}};

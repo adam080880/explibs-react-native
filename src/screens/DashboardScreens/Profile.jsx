@@ -21,7 +21,6 @@ import {
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-picker';
-import {} from 'react-native-permissions';
 import Spinner from 'react-native-spinkit';
 import {
   RadioButton,
@@ -151,7 +150,10 @@ class Profile extends React.Component {
       formData.append('name', name);
       formData.append('phone', phone);
       formData.append('gender', gender);
-      formData.append('birthdate', birthdate);
+      formData.append(
+        'birthdate',
+        new Date(this.state.birthDate).toISOString().slice(0, 10),
+      );
       if (this.state.file) {
         formData.append('image', {
           name: this.state.file.fileName,

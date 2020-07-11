@@ -10,4 +10,10 @@ export default {
     return axios.get(apiUrl(`/books/${id}`));
   },
   popular: () => axios.get(apiUrl('/books/popular')),
+  review: (data, bookId, token) =>
+    axios.post(apiUrl(`/books/review/${bookId}`), qs.stringify(data), {
+      headers: {
+        Authorization: 'Bearer '.concat(token),
+      },
+    }),
 };
