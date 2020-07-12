@@ -233,7 +233,9 @@ class Detail extends React.Component {
                   )}
                   {this.props.book.book.newReviews.map((val, index) => {
                     return (
-                      <View key={index} style={{...{flexDirection: 'row'}}}>
+                      <View
+                        key={index}
+                        style={{...{flexDirection: 'row', marginBottom: 20}}}>
                         <View
                           style={{
                             ...{
@@ -266,7 +268,7 @@ class Detail extends React.Component {
                         </View>
                         <View
                           style={{
-                            ...{flex: 1, paddingLeft: 15, marginBottom: 20},
+                            ...{flex: 1, paddingLeft: 15},
                           }}>
                           <Text style={{...{fontWeight: 'bold'}}}>
                             {val.name}

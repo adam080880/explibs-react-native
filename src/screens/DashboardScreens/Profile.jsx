@@ -126,14 +126,14 @@ class Profile extends React.Component {
 
   submit = (e) => {
     const {name, phone, gender, birthDate: birthdate} = this.state;
-    const res = birthdate.toJSON().slice(0, 10);
+    const birth = birthdate.toJSON().slice(0, 10);
     this.setState({
       isLoading: true,
     });
     if (this.props.auth.session.name === null) {
       this.props
         .confirmRegistration(
-          {name, phone, gender, birthdate: res},
+          {name, phone, gender, birthdate: birth},
           this.props.auth.session.token,
         )
         .then(() => {
@@ -174,7 +174,7 @@ class Profile extends React.Component {
               birthDate: new Date(res2.value.data.data.bio.birthdate),
               phone: res2.value.data.data.bio.phone,
               gender: res2.value.data.data.bio.gender.length > 0 ? 'm' : 'f',
-              fileUri: res.value.data.data.bio.profile,
+              fileUri: res2.value.data.data.bio.profile,
             });
           });
         })
