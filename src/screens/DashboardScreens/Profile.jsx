@@ -213,7 +213,7 @@ class Profile extends React.Component {
             />
           </View>
         )}
-        {(this.props.auth.isLoading === null || !this.state.isLoading) && (
+        {(this.props.auth.isLoading === false || !this.state.isLoading) && (
           <>
             <SafeAreaView
               style={{
@@ -234,41 +234,37 @@ class Profile extends React.Component {
                     },
                   }}>
                   {this.props.auth.session.name !== null && (
-                    <Image
-                      resizeMode={'cover'}
-                      source={
-                        !this.state.fileUri
-                          ? require('../../assets/images/humann.png')
-                          : {uri: this.state.fileUri}
-                      }
-                      style={{
-                        ...{
-                          height: 150,
-                          width: 150,
-                          borderRadius: 150 / 2,
-                        },
-                      }}
-                    />
+                    <>
+                      <Image
+                        resizeMode={'cover'}
+                        source={
+                          !this.state.fileUri
+                            ? require('../../assets/images/humann.png')
+                            : {uri: this.state.fileUri}
+                        }
+                        style={{
+                          ...{
+                            height: 150,
+                            width: 150,
+                            borderRadius: 150 / 2,
+                          },
+                        }}
+                      />
+                      <Text
+                        onPress={this.click}
+                        style={{
+                          ...{
+                            color: color.COLOR_UTILITIES_BACKGROUND,
+                            fontWeight: 'bold',
+                            marginTop: 18,
+                          },
+                        }}>
+                        Edit Profile
+                      </Text>
+                    </>
                   )}
-                  <Text
-                    onPress={this.click}
-                    style={{
-                      ...{
-                        color: color.COLOR_UTILITIES_BACKGROUND,
-                        fontWeight: 'bold',
-                        marginTop: 18,
-                      },
-                    }}>
-                    Edit Profile
-                  </Text>
                 </View>
                 <View>
-                  <atoms.TextInput
-                    label="Email"
-                    defaultValue={this.state.email}
-                    style={{...{marginBottom: 20}}}
-                    placeholder="Your email"
-                  />
                   <atoms.TextInput
                     label="Name"
                     onChange={(e) => this.setState({name: e.nativeEvent.text})}
