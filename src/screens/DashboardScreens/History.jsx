@@ -11,6 +11,7 @@ import {
   resetData,
 } from '../../redux/actions/transaction';
 import color from '../../styles/color';
+import atoms from '../../components/atoms';
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
@@ -30,6 +31,8 @@ class History extends React.Component {
     this.state = {
       page: 1,
       search: '',
+      toggleSort: false,
+      sort: 'asc',
     };
   }
 
@@ -39,6 +42,7 @@ class History extends React.Component {
       {
         page: 1,
         search: '',
+        sort: 'asc',
       },
       this.props.auth.session.token,
     );
@@ -47,6 +51,7 @@ class History extends React.Component {
       {
         page: 1,
         search: '',
+        sort: 'asc',
       },
       () => {
         this.props.resetData();
@@ -62,6 +67,7 @@ class History extends React.Component {
         {
           page: this.state.page,
           search: this.state.search,
+          sort: this.state.sort,
         },
         this.props.auth.session.token,
       );
@@ -77,6 +83,21 @@ class History extends React.Component {
       },
       () => {
         this.props.setPage(this.state.page + 1);
+        this.getHistory();
+      },
+    );
+  };
+
+  changeSort = (sort) => {
+    this.props.resetData();
+    this.props.setPage(1);
+    this.setState(
+      {
+        sort: sort,
+        page: 1,
+        search: '',
+      },
+      () => {
         this.getHistory();
       },
     );
@@ -126,7 +147,74 @@ class History extends React.Component {
             paddingHorizontal: 25,
           },
         }}>
-        <Text style={this.props.styled.label}>Recent Transaction</Text>
+        <atoms.TextInput
+          onChangeText={(text) => {
+            this.setState({
+              search: text,
+            });
+          }}
+          onSubmitEditing={() => {
+            this.props.resetData();
+            this.setState(
+              {
+                page: 1,
+                sort: this.state.sort,
+                search: this.state.search,
+              },
+              () => {
+                this.getHistory();
+              },
+            );
+          }}
+          placeholder="Search here"
+          value={this.state.search}
+          style={{...{paddingLeft: 45}}}
+        />
+        <View
+          style={{
+            ...{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            },
+          }}>
+          <Text style={this.props.styled.label}>Recent Transaction</Text>
+          <Text
+            onPress={(e) =>
+              this.setState({
+                toggleSort: !this.state.toggleSort,
+              })
+            }
+            style={{
+              ...this.props.styled.label,
+              ...{
+                fontSize: typography.FONT_SIZE_SECONDARY,
+                fontWeight: 'bold',
+                color: color.COLOR_UTILITIES_BACKGROUND,
+              },
+            }}>
+            Sort By
+          </Text>
+        </View>
+        {this.state.toggleSort && (
+          <View
+            style={{
+              ...{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              },
+            }}>
+            <Text
+              onPress={() => this.changeSort('desc')}
+              style={{...styled.sort, ...{marginRight: 10}}}>
+              Desc
+            </Text>
+            <Text onPress={() => this.changeSort('asc')} style={styled.sort}>
+              Asc
+            </Text>
+          </View>
+        )}
         <FlatList
           data={Array.from(
             new Set(this.props.transaction.data.map((a) => a.id)),
@@ -187,5 +275,10 @@ const styled = StyleSheet.create({
   },
   booked: {
     backgroundColor: 'red',
+  },
+  sort: {
+    fontSize: typography.FONT_SIZE_SECONDARY,
+    color: color.COLOR_UTILITIES_BACKGROUND,
+    marginBottom: 20,
   },
 });
