@@ -1,3 +1,3 @@
-const BACKEND_API = 'http://192.168.0.4:8080';
+const BACKEND_API = 'http://52.87.153.181:8081';
 
 export default (uri) => BACKEND_API.concat(uri);
